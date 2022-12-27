@@ -12,6 +12,9 @@ const FirebaseAuth = () => {
   const router = useRouter();
   return (
     <div className="flex flex-col w-[100vw] h-[100vh] items-center justify-center ">
+      <h1
+      className="text-4xl font-bold text-center mb-10 text-white"
+      >Ty<span className="text-blue-800" >pos</span></h1>
       <h1 className="text-4xl font-bold text-center mb-10 text-white">
         Sign in to <span className="text-blue-800">Save Progress</span> <br />{" "}
       </h1>

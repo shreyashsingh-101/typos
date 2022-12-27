@@ -1,13 +1,49 @@
-import dynamic from "next/dynamic";
+import {
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import { useEffect, useState } from "react";
 
-const Chart = dynamic(() => import("../pages/Chart/Chart.js"), { ssr: false });
+const Graph = ({ data }) => {
+  const [dataPoints, setDataPoints] = useState([]);
 
-const Graph = ({data}) => {
+  useEffect(() => {
+    if (data) {
+      const dataPoints = Object.keys(data).map((item) => {
+        return {
+          date: data[item].date,
+          wpm: data[item].wpm,
+        };
+      });
+      setDataPoints(dataPoints);
+    }
+  }, [data]);
+
   return (
-    <div 
-    className="w-[80%] h-[450px] mx-auto"
-    >
-      <Chart data={data}/>
+    <div className="w-full h-[400px] pr-10">
+      {dataPoints.length > 0 ? (
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart
+            data={dataPoints}
+            height={200}
+            width={500}
+            className="w-full h-[200px]"
+          >
+            <Line type="monotone" dataKey="wpm" stroke="#8884d8" />
+            <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+            <XAxis dataKey="date" />
+            <YAxis dataKey="wpm"/>
+            <Tooltip />
+          </LineChart>
+        </ResponsiveContainer>
+      ) : (
+        <p className="text-xl text-center">No data available</p>
+      )}
     </div>
   );
 };

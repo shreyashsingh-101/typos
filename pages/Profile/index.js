@@ -18,7 +18,6 @@ const Home = () => {
       .then((snapshot) => {
         if (snapshot.exists()) {
           setData(snapshot.val());
-          console.log(setData);
         } else {
           console.log("No data available");
         }

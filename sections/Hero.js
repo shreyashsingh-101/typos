@@ -7,7 +7,6 @@ import { slideIn } from "../utils/motion";
 import { useUser } from "../auth/useUser";
 import { getDatabase, ref, child, push } from "firebase/database";
 
-
 let Uploaded = false;
 
 function uploadScore(score, id, name) {
@@ -70,6 +69,9 @@ const Hero = () => {
         letter.remove();
       }
     });
+    document.querySelector(".active")?.classList.remove("active");
+
+    document.querySelector(".letter").classList.add("active");
     Uploaded = false;
   }
 
@@ -86,9 +88,9 @@ const Hero = () => {
         if (text_letters[index + 1].classList.contains("error")) {
           text_letters[index + 1].remove();
         }
-      } else if (letter === text_letters[index].innerText) {
+      } else if (index >= 0 && letter === text_letters[index].innerText) {
         text_letters[index].classList.add("text-white");
-      } else {
+      } else if (index >= 0 && letter !== text_letters[index].innerText) {
         text_letters[index].insertAdjacentHTML(
           "beforebegin",
           `<span class="letter text-red-500 error">${letter}</span>`
@@ -107,6 +109,16 @@ const Hero = () => {
         }
       }
     }
+
+    document.querySelectorAll(".letter").forEach((letter, key) => {
+      letter.classList.remove("active");
+      if (key > index) {
+        letter.classList.remove("text-white");
+        letter.classList.remove("text-red-500");
+        if(letter.classList.contains("error")) letter.remove();
+      }
+    });
+    document.querySelectorAll(".letter")[index + 1].classList.add("active");
 
     let typed_words = value.split(" ").length;
 
@@ -159,7 +171,7 @@ const Hero = () => {
 
       {isTestRunning && (
         <textarea
-          className="editor translate-y-[-200px]  p-5 pr-9 w-full h-[200px] bg-transparent border-none outline-none z-10 overflow-hidden resize-none text-transparent caret-white "
+          className="editor translate-y-[-200px]  p-5 pr-9 w-full h-[200px] bg-transparent border-none outline-none z-10 overflow-hidden resize-none text-transparent"
           onChange={handleChange}
           data-gramm_editor="false"
           data-gramm="false"

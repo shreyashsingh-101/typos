@@ -7,17 +7,24 @@ import { slideIn } from "../utils/motion";
 import { useUser } from "../auth/useUser";
 import { getDatabase, ref, child, push } from "firebase/database";
 
+
+let Uploaded = false;
+
 function uploadScore(score, id, name) {
-  const dbRef = ref(getDatabase());
-  push(child(dbRef, `/leaderboard`), {
-    name: name,
-    wpm: score,
-    date: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString() ,
-  });
-  push(child(dbRef, `/users/${id}/scores`), {
-    wpm: score,
-    date: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString() ,
-  });
+  if (!Uploaded) {
+    const dbRef = ref(getDatabase());
+    const date = Date().split(" ");
+    push(child(dbRef, `/leaderboard`), {
+      name: name,
+      wpm: score,
+      date: `${date[2]}/${date[1]}/${date[3]} ${date[4]}`,
+    });
+    push(child(dbRef, `/users/${id}/scores`), {
+      wpm: score,
+      date: `${date[2]}/${date[1]}/${date[3]} ${date[4]}`,
+    });
+    Uploaded = true;
+  }
 }
 
 const Hero = () => {
@@ -63,6 +70,7 @@ const Hero = () => {
         letter.remove();
       }
     });
+    Uploaded = false;
   }
 
   function handleChange(event) {
